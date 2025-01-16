@@ -10,8 +10,10 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "emailjs-com": "^3.2.0",
     "gh-pages": "^6.3.0",
     "sass": "^1.83.4",
     "sass-loader": "^16.0.4",

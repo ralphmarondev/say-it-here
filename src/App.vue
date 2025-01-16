@@ -1,10 +1,36 @@
 <script setup>
 import {ref} from 'vue'
+import emailjs from 'emailjs-com'
 
+const isLoading = ref(false)
 const message = ref('')
 
 const onSend = () => {
+  if (!message.value.trim()) {
+    alert('Please enter a message before sending.')
+    return
+  }
   console.log(`Message: ${message.value}`)
+
+  const serviceId = import.meta.env.VITE_SERVICE_ID
+  const templateId = import.meta.env.VITE_TEMPLATE_ID
+  const publicKey = import.meta.env.VITE_PUBLIC_KEY
+
+  isLoading.value = true
+  emailjs
+      .send(serviceId, templateId, {message: message.value.trim()}, publicKey)
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text)
+        alert('Email sent successfully!')
+        message.value = ''
+      })
+      .catch((error) => {
+        console.log('ERROR!', error)
+        alert('Failed to send email. Please try again later.')
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
 }
 </script>
 
@@ -43,9 +69,10 @@ const onSend = () => {
                   class="form-control mb-4"
                   placeholder="Say me anonymous messages! Say it here!"
                   v-model="message"
+                  aria-label="Your anonymous message"
               ></textarea>
 
-              <button class="btn btn-primary w-100">Send!</button>
+              <button class="btn btn-primary w-100" :disabled="isLoading" aria-label="Send message">Send!</button>
             </div>
           </form>
         </div>
